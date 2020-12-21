@@ -4,7 +4,6 @@
 
 > 本指南假定你已经阅读了[组合式 API 简介](composition-api-introduction.html)和[响应性原理](reactivity-fundamentals.html)。如果你不熟悉组合式 API，请先阅读这篇文章。
 
-
 ## 参数
 
 使用 `setup` 函数时，它将接受两个参数：
@@ -35,7 +34,7 @@ export default {
 但是，因为 `props` 是响应式的，你**不能使用 ES6 解构**，因为它会消除 prop 的响应性。
 :::
 
-如果需要解构 prop，可以通过使用 `setup` 函数中的 [`toRefs`](reactivity-fundamentals.html#响应式状态解构) 来安全地完成此操作。
+如果需要解构 prop，可以通过使用 `setup` 函数中的 [`toRefs`](reactivity-fundamentals.html#响应式状态解构) 来完成此操作：
 
 ```js
 // MyBook.vue
@@ -49,7 +48,19 @@ setup(props) {
 }
 ```
 
-### 上下文
+
+如果 `title` 是可选的 prop，则传入的 `props` 中可能没有 `title` 。在这种情况下，`toRefs` 将不会为 `title` 创建一个 ref 。你需要使用 `toRef` 替代它：
+
+```js
+// MyBook.vue
+import { toRef } from 'vue'
+setup(props) {
+	const title = toRef(props, 'title')
+	console.log(title.value)
+}
+```
+
+### Context
 
 传递给 `setup` 函数的第二个参数是 `context`。`context` 是一个普通的 JavaScript 对象，它暴露三个组件的 property：
 

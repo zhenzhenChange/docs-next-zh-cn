@@ -126,6 +126,8 @@ const MyComponent = {
 
 - **类型声明**：
 
+<!-- TODO: translation -->
+
 ```ts
 interface InjectionKey<T> extends Symbol {}
 
@@ -135,6 +137,12 @@ function provide<T>(key: InjectionKey<T> | string, value: T): void
 function inject<T>(key: InjectionKey<T> | string): T | undefined
 // with default value
 function inject<T>(key: InjectionKey<T> | string, defaultValue: T): T
+// with factory
+function inject<T>(
+  key: InjectionKey<T> | string,
+  defaultValue: () => T,
+  treatDefaultAsFactory: true
+): T
 ```
 
 Vue 提供了一个 `InjectionKey` 接口，该接口是扩展 `Symbol` 的泛型类型。它可用于在提供者和消费者之间同步注入值的类型：
@@ -159,11 +167,9 @@ const foo = inject<string>('foo') // string | undefined
   - [Provide / Inject](../guide/component-provide-inject.html)
   - [组合式 API Provide / Inject](../guide/composition-api-provide-inject.html)
 
-<!-- TODO: translation -->
-
 ## `getCurrentInstance`
 
-`getCurrentInstance` enables access to an internal component instance useful for advanced usages or for library creators.
+`getCurrentInstance` 支持访问内部组件实例，用于高阶用法或库的开发。
 
 ```ts
 import { getCurrentInstance } from 'vue'
@@ -172,14 +178,14 @@ const MyComponent = {
   setup() {
     const internalInstance = getCurrentInstance()
 
-    internalInstance.appContext.config.globalProperties // access to globalProperties
+    internalInstance.appContext.config.globalProperties // 访问 globalProperties
   }
 }
 ```
 
-`getCurrentInstance` **only** works during [setup](#setup) or [Lifecycle Hooks](#lifecycle-hooks)
+`getCurrentInstance` **只能**在 [setup](#setup) 或[生命周期钩子](#lifecycle-hooks)中调用。
 
-> When using outside of [setup](#setup) or [Lifecycle Hooks](#lifecycle-hooks), please call `getCurrentInstance()` on `setup` and use the instance instead.
+> 如需在 [setup](#setup) 或[生命周期钩子](#lifecycle-hooks)外使用，请先在 `setup` 中调用 `getCurrentInstance()` 获取该实例然后再使用。
 
 ```ts
 const MyComponent = {
@@ -210,7 +216,7 @@ const MyComponent = {
   }
 }
 
-// also works if called on a composable
+// 在组合式函数中调用也可以正常执行
 function useComponentId() {
   return getCurrentInstance().uid
 }
